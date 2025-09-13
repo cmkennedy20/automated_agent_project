@@ -1,5 +1,6 @@
 name: Resolve Issue with OpenHands
 
+# Trigger this workflow on specific events
 on:
   issues:
     types: [labeled]
@@ -12,21 +13,24 @@ on:
   pull_request_review:
     types: [submitted]
 
+# Give the workflow necessary permissions
 permissions:
   contents: write
   pull-requests: write
   issues: write
 
+# Define the job that will call the reusable workflow
 jobs:
   call-openhands-resolver:
-    # Use the self-hosted runner. This line is at the correct level.
-    runs-on: [self-hosted, <your-runner-label>] # IMPORTANT: Replace this with your actual runner label.
+    # Specify the runner to use. This must be at the top level of the job.
+    runs-on: [self-hosted, <your-runner-label>] # IMPORTANT: Replace with your actual runner label.
 
-    # The 'uses' keyword for calling a reusable workflow MUST be
-    # at the same level as 'runs-on'. This is the key fix.
+    # This is the correct way to call the reusable workflow.
+    # It must be a direct child of the job name.
     uses: All-Hands-AI/OpenHands/.github/workflows/openhands-resolver.yml@main
 
-    # The 'with' keyword MUST also be at the same level as 'uses'.
+    # The 'with' block passes inputs to the reusable workflow.
+    # It must also be at the top level of the job.
     with:
       macro: ${{ vars.OPENHANDS_MACRO || '@openhands-agent' }}
       max_iterations: ${{ fromJson(vars.OPENHANDS_MAX_ITER || 50) }}
@@ -35,7 +39,8 @@ jobs:
       target_branch: ${{ vars.TARGET_BRANCH || 'main' }}
       runner: ${{ vars.TARGET_RUNNER }}
 
-    # The 'secrets' block MUST also be at the same level as 'uses'.
+    # The 'secrets' block passes secrets to the reusable workflow.
+    # It must also be at the top level of the job.
     secrets:
       PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
       PAT_USERNAME: ${{ secrets.PAT_USERNAME }}
