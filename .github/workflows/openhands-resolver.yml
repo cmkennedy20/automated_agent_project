@@ -31,4 +31,4 @@ jobs:
       PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
       PAT_USERNAME: "cmkennedy20"
       LLM_API_KEY: empty-key
-      LLM_BASE_URL: http://10.0.0.190/v1/
+      LLM_BASE_URL: http://10.0.0.190:11434/v1
