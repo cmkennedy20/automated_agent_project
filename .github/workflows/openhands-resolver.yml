@@ -1,7 +1,5 @@
 name: Resolve Issue with OpenHands
 
-# This workflow is triggered on specific events in the repository.
-# You've chosen a good set of events to trigger the agent.
 on:
   issues:
     types: [labeled]
@@ -14,42 +12,32 @@ on:
   pull_request_review:
     types: [submitted]
 
-# Set permissions for the GITHUB_TOKEN. This is a best practice for security.
-# The agent needs to be able to write to issues, pull requests, and contents.
 permissions:
   contents: write
   pull-requests: write
   issues: write
 
-# The main job to call the OpenHands resolver workflow.
 jobs:
   call-openhands-resolver:
-    # Use the self-hosted runner group or label.
-    # This is crucial to tell GitHub Actions to use your home network runner.
-    runs-on: [self-hosted] # IMPORTANT: Replace <your-runner-label> with the custom label you set when you configured your self-hosted runner (e.g., 'ubuntu-22.04-gpu').
+    # Use the self-hosted runner. This line is at the correct level.
+    runs-on: [self-hosted, <your-runner-label>] # IMPORTANT: Replace this with your actual runner label.
 
-    # Use the 'uses' keyword to call the reusable workflow.
+    # The 'uses' keyword for calling a reusable workflow MUST be
+    # at the same level as 'runs-on'. This is the key fix.
     uses: All-Hands-AI/OpenHands/.github/workflows/openhands-resolver.yml@main
 
-    # Use the 'with' block to pass parameters to the reusable workflow.
+    # The 'with' keyword MUST also be at the same level as 'uses'.
     with:
-      # Pass non-sensitive configuration variables.
-      # It's better to explicitly define these than rely on default `vars`.
-      macro: "@openhands-agent"
-      max_iterations: 50
-      base_container_image: ""
-      LLM_MODEL: "deepseek-r1:32b" # Use your chosen Ollama model
-      target_branch: "main"
+      macro: ${{ vars.OPENHANDS_MACRO || '@openhands-agent' }}
+      max_iterations: ${{ fromJson(vars.OPENHANDS_MAX_ITER || 50) }}
+      base_container_image: ${{ vars.OPENHANDS_BASE_CONTAINER_IMAGE || '' }}
+      LLM_MODEL: ${{ vars.LLM_MODEL || 'anthropic/claude-sonnet-4-20250514' }}
+      target_branch: ${{ vars.TARGET_BRANCH || 'main' }}
+      runner: ${{ vars.TARGET_RUNNER }}
 
-      # The runner parameter should not be defined here if you're using `runs-on`.
-      # The `runs-on` keyword handles the runner selection directly.
-      # runner: ${{ vars.TARGET_RUNNER }} # This line is unnecessary and can be removed.
-
-      # Pass the secrets securely.
-      # PAT_TOKEN and PAT_USERNAME are required for the agent to authenticate and perform actions.
-      # LLM_API_KEY and LLM_BASE_URL are for the Ollama server.
-      secrets:
-        PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-        PAT_USERNAME: ${{ secrets.PAT_USERNAME }}
-        LLM_API_KEY: ${{ secrets.LLM_API_KEY }} # Store 'empty-key' as a secret
-        LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }} # Store 'http://10.0.0.190:11434/v1/' as a secret
+    # The 'secrets' block MUST also be at the same level as 'uses'.
+    secrets:
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+      PAT_USERNAME: ${{ secrets.PAT_USERNAME }}
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+      LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
