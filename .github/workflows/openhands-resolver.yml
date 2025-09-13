@@ -1,42 +1,64 @@
+# Line 1
 name: Resolve Issue with OpenHands
-
+# Line 2
 on:
+  # Line 3
   issues:
+    # Line 4
     types: [labeled]
+  # Line 5
   pull_request:
+    # Line 6
     types: [labeled]
+  # Line 7
   issue_comment:
+    # Line 8
     types: [created]
+  # Line 9
   pull_request_review_comment:
+    # Line 10
     types: [created]
+  # Line 11
   pull_request_review:
+    # Line 12
     types: [submitted]
-
+# Line 13
 permissions:
+  # Line 14
   contents: write
+  # Line 15
   pull-requests: write
+  # Line 16
   issues: write
-
+# Line 17
 jobs:
+  # Line 18
   call-openhands-resolver:
-    # This line specifies the runner. It must be at the top level of the job.
-    runs-on: [self-hosted] # IMPORTANT: Replace with your actual runner label.
-
-    # This line calls the reusable workflow. It must be at the same level as `runs-on`.
+    # Line 19
+    runs-on: [self-hosted, <your-runner-label>]
+    # Line 20
     uses: All-Hands-AI/OpenHands/.github/workflows/openhands-resolver.yml@main
-
-    # The `with` block passes inputs. It must be at the same level as `uses`.
+    # Line 21
     with:
+      # Line 22
       macro: ${{ vars.OPENHANDS_MACRO || '@openhands-agent' }}
+      # Line 23
       max_iterations: ${{ fromJson(vars.OPENHANDS_MAX_ITER || 50) }}
+      # Line 24
       base_container_image: ${{ vars.OPENHANDS_BASE_CONTAINER_IMAGE || '' }}
+      # Line 25
       LLM_MODEL: ${{ vars.LLM_MODEL || 'anthropic/claude-sonnet-4-20250514' }}
+      # Line 26
       target_branch: ${{ vars.TARGET_BRANCH || 'main' }}
+      # Line 27
       runner: ${{ vars.TARGET_RUNNER }}
-
-    # The `secrets` block passes secrets. It must be at the same level as `with`.
+    # Line 28
     secrets:
+      # Line 29
       PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+      # Line 30
       PAT_USERNAME: ${{ secrets.PAT_USERNAME }}
+      # Line 31
       LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+      # Line 32
       LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
