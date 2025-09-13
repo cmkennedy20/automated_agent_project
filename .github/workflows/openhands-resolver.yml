@@ -18,8 +18,8 @@ permissions:
   issues: write
 
 jobs:
-  runs-on: self-hosted
   call-openhands-resolver:
+    runs-on: self-hosted
     uses: All-Hands-AI/OpenHands/.github/workflows/openhands-resolver.yml@main
     with:
       macro: ${{ vars.OPENHANDS_MACRO || '@openhands-agent' }}
