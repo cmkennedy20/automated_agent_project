@@ -19,17 +19,16 @@ permissions:
 
 jobs:
   call-openhands-resolver:
-    runs-on: [self-hosted, <your-runner-label>]
-
     uses: All-Hands-AI/OpenHands/.github/workflows/openhands-resolver.yml@main
-
     with:
-      macro: "@openhands-agent"
-      max_iterations: 50
-      LLM_MODEL: "deepseek-r1:32b"
-      target_branch: "main"
-
+      macro: ${{ vars.OPENHANDS_MACRO || '@openhands-agent' }}
+      max_iterations: ${{ fromJson(vars.OPENHANDS_MAX_ITER || 50) }}
+      base_container_image: ${{ vars.OPENHANDS_BASE_CONTAINER_IMAGE || '' }}
+      LLM_MODEL: ${{ vars.LLM_MODEL || 'openai/qwen3:30b' }}
+      target_branch: ${{ vars.TARGET_BRANCH || 'main' }}
+      runner: self-hosted
+    secrets:
       PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-      PAT_USERNAME: ${{ secrets.PAT_USERNAME }}
-      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-      LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+      PAT_USERNAME: "cmkennedy20"
+      LLM_API_KEY: empty-key
+      LLM_BASE_URL: http://10.0.0.190/v1/
