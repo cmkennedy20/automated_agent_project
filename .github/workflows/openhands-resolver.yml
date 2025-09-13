@@ -20,16 +20,18 @@ permissions:
 jobs:
   call-openhands-resolver:
     runs-on: self-hosted
-    uses: All-Hands-AI/OpenHands/.github/workflows/openhands-resolver.yml@main
-    with:
-      macro: ${{ vars.OPENHANDS_MACRO || '@openhands-agent' }}
-      max_iterations: ${{ fromJson(vars.OPENHANDS_MAX_ITER || 50) }}
-      base_container_image: ${{ vars.OPENHANDS_BASE_CONTAINER_IMAGE || '' }}
-      LLM_MODEL: ${{ vars.LLM_MODEL || 'openai/qwen3:30b' }}
-      target_branch: ${{ vars.TARGET_BRANCH || 'main' }}
-      runner: ${{ vars.TARGET_RUNNER }}
-    secrets:
-      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-      PAT_USERNAME:
-      LLM_API_KEY: empty-key
-      LLM_BASE_URL: http://10.0.0.190/v1/
+    steps:
+      - name: Call OpenHands Resolver Workflow
+        uses: All-Hands-AI/OpenHands/.github/workflows/openhands-resolver.yml@main
+        with:
+          macro: ${{ vars.OPENHANDS_MACRO || '@openhands-agent' }}
+          max_iterations: ${{ fromJson(vars.OPENHANDS_MAX_ITER || 50) }}
+          base_container_image: ${{ vars.OPENHANDS_BASE_CONTAINER_IMAGE || '' }}
+          LLM_MODEL: ${{ vars.LLM_MODEL || 'openai/qwen3:30b' }}
+          target_branch: ${{ vars.TARGET_BRANCH || 'main' }}
+          runner: ${{ vars.TARGET_RUNNER }}
+        secrets:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+          PAT_USERNAME:
+          LLM_API_KEY: empty-key
+          LLM_BASE_URL: http://10.0.0.190/v1/
