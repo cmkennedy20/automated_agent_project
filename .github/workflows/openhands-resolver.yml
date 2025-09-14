@@ -244,7 +244,7 @@ jobs:
           ls -alrt 
           pwd
           whoami
-          echo $SANDBOX_VOLUME
+          echo "_work/:/actions-runner/_work/code"
           echo "Sandbox value"
           cd /tmp && python -m openhands.resolver.resolve_issue \
             --selected-repo ${{ github.repository }} \
@@ -253,7 +253,7 @@ jobs:
             --max-iterations ${{ env.MAX_ITERATIONS }} \
             --comment-id ${{ env.COMMENT_ID }} \
             --is-experimental ${{ steps.install_openhands.outputs.isExperimental }}
-            --output-dir $SANDBOX_VOLUME
+            --output-dir "_work/:/actions-runner/_work/code"
 
       - name: Check resolution result
         id: check_result
