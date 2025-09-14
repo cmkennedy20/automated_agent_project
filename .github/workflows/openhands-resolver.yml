@@ -29,7 +29,7 @@ on:
         default: "self-hosted"
       SANDBOX_VOLUMES:
         type: string
-        default: "_work/:/workspace/codes"
+        default: "_work/:/workspace/code"
     secrets:
       PAT_TOKEN:
         required: false
@@ -253,7 +253,7 @@ jobs:
             --max-iterations ${{ env.MAX_ITERATIONS }} \
             --comment-id ${{ env.COMMENT_ID }} \
             --is-experimental ${{ steps.install_openhands.outputs.isExperimental }}
-            --output-dir "_work/:/workspace/codes"
+            --output-dir "_work/:/workspace/code"
 
       - name: Check resolution result
         id: check_result
