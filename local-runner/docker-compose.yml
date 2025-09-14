@@ -1,0 +1,15 @@
+services:
+  openhands-app:
+    image: docker.all-hands.dev/all-hands-ai/openhands:0.56
+    pull_policy: always
+    environment:
+      # - SANDBOX_RUNTIME_CONTAINER_IMAGE=docker.all-hands.dev/all-hands-ai/runtime:0.56-nikolaik
+      - LOG_ALL_EVENTS=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.openhands:/.openhands
+    ports:
+      - "3000:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    container_name: openhands-app

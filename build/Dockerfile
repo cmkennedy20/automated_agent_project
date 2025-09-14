@@ -2,11 +2,12 @@ FROM ubuntu:22.04
 
 # --- Environment Variables ---
 ENV AGENT_DIR="/actions-runner"
-ENV SANDBOX_VOLUMES=${AGENT_DIR}/_work/code
+ENV SANDBOX_VOLUMES="_work/:${AGENT_DIR}/_work/code"
 # NOTE: The version 2.328.0 does not exist. Using a recent, valid version.
 ENV RUNNER_VERSION="2.311.0"
 ENV RUNNER_TGZ="actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz"
 ENV RUNNER_URL="https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/${RUNNER_TGZ}"
+ENV RUNNER_ALLOW_RUNASROOT=1
 
 # --- Install Dependencies, Runner, and create user ---
 RUN apt-get update -y && \
@@ -25,7 +26,7 @@ RUN apt-get update -y && \
     tar xzf /tmp/${RUNNER_TGZ} -C ${AGENT_DIR} --strip-components=1 && \
     rm /tmp/${RUNNER_TGZ} && \
     # Set correct ownership for the agent directory
-    chown -R agent:agent ${AGENT_DIR} && \
+    # chown -R agent:agent ${AGENT_DIR} && \
     # Clean up apt cache
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -43,10 +44,11 @@ RUN install -m 0755 -d /etc/apt/keyrings && \
 
 # --- Finalizing Container Configuration ---
 # Copy the startup script and ensure it's owned by the agent user
-COPY --chown=agent:agent ./build/agent-startup.sh ${AGENT_DIR}/
+# COPY --chown=agent:agent ./build/agent-startup.sh ${AGENT_DIR}/
+COPY ./build/agent-startup.sh ${AGENT_DIR}/
 
 # Switch to the non-root user
-USER agent
+# USER agent
 WORKDIR ${AGENT_DIR}
 
 

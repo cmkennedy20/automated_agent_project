@@ -236,11 +236,12 @@ jobs:
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
           LLM_API_VERSION: ${{ inputs.LLM_API_VERSION }}
-          PYTHONPATH: ""
+          SANDBOX_VOLUMES: ${{ env.SANDBOX_VOLUMES }}
         run: |
           ls -alrt 
           pwd
           whoami
+
           cd /tmp && python -m openhands.resolver.resolve_issue \
             --selected-repo ${{ github.repository }} \
             --issue-number ${{ env.ISSUE_NUMBER }} \
