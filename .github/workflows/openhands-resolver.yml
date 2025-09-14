@@ -241,7 +241,7 @@ jobs:
           ls -alrt 
           pwd
           whoami
-          python -m /tmp/openhands.resolver.resolve_issue \
+          cd /tmp && python -m openhands.resolver.resolve_issue \
             --selected-repo ${{ github.repository }} \
             --issue-number ${{ env.ISSUE_NUMBER }} \
             --issue-type ${{ env.ISSUE_TYPE }} \
