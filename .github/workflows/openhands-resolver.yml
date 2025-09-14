@@ -27,7 +27,7 @@ on:
         required: false
         type: string
         default: "self-hosted"
-      SANDBOX_VOLUME:
+      SANDBOX_VOLUMES:
         type: string
         default: "_work/:/workspace/codes"
     secrets:
@@ -239,7 +239,7 @@ jobs:
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
           LLM_API_VERSION: ${{ inputs.LLM_API_VERSION }}
-          SANDBOX_VOLUME: ${{ inputs.SANDBOX_VOLUME }}
+          SANDBOX_VOLUMES: ${{ inputs.SANDBOX_VOLUMES }}
         run: |
           ls -alrt 
           pwd
