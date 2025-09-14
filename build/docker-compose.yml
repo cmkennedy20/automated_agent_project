@@ -8,4 +8,4 @@ services:
     network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./_work/:/actions-runner/_work/code
+      - ./_work/:/actions-runner/_work/automated_agent_project/automated_agent_project
