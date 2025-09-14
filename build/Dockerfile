@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 
 # --- Environment Variables ---
 ENV AGENT_DIR="/actions-runner"
-ENV WORKSPACE_BASE=${AGENT_DIR}/_work
+ENV SANDBOX_VOLUMES=${AGENT_DIR}/_work/code
 # NOTE: The version 2.328.0 does not exist. Using a recent, valid version.
 ENV RUNNER_VERSION="2.311.0"
 ENV RUNNER_TGZ="actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz"
@@ -19,7 +19,7 @@ RUN apt-get update -y && \
     usermod -aG sudo agent && \
     echo "agent ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
     # Create the runner directory
-    mkdir -p ${AGENT_DIR} ${WORKSPACE_BASE} && \
+    mkdir -p ${AGENT_DIR} ${SANDBOX_VOLUMES} && \
     # Download and extract the runner in one step
     curl -o /tmp/${RUNNER_TGZ} -L ${RUNNER_URL} && \
     tar xzf /tmp/${RUNNER_TGZ} -C ${AGENT_DIR} --strip-components=1 && \
@@ -43,7 +43,7 @@ RUN install -m 0755 -d /etc/apt/keyrings && \
 
 # --- Finalizing Container Configuration ---
 # Copy the startup script and ensure it's owned by the agent user
-COPY --chown=agent:agent agent-startup.sh ${AGENT_DIR}/
+COPY --chown=agent:agent ./build/agent-startup.sh ${AGENT_DIR}/
 
 # Switch to the non-root user
 USER agent

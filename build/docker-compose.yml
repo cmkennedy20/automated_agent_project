@@ -1,9 +1,11 @@
 services:
   github-agent:
-    build: ..
+    build: 
+      context: ..
+      dockerfile: build/Dockerfile
     env_file:
-      - ./build/.env
+      - ../build/.env
     network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./_work/:/actions-runner/_work/
+      - ./_work/:/actions-runner/_work/code
