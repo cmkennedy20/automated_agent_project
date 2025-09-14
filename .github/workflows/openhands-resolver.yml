@@ -27,6 +27,9 @@ on:
         required: false
         type: string
         default: "self-hosted"
+      SANDBOX_VOLUME:
+        type: string
+        default: "_work/:/actions-runner/_work/code"
     secrets:
       PAT_TOKEN:
         required: false
@@ -236,6 +239,7 @@ jobs:
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
           LLM_API_VERSION: ${{ inputs.LLM_API_VERSION }}
+          SANDBOX_VOLUME: ${{ inputs.SANDBOX_VOLUME }}
         run: |
           ls -alrt 
           pwd
